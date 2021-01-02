@@ -44,30 +44,6 @@ test_api:
   script:
     - npm test
 
-coverage:
-    stage: build
-    only:
-       - master
-    script:
-       - npm run test:report
-    coverage: '/All files[^|]*\|[^|]*\s+([\d\.]+)/'
-    artifacts:
-       paths:
-          - coverage/
-
-pages:
-  stage: deploy
-  only:
-    - master
-  dependencies:
-    - coverage
-  script:
-    - mv coverage public
-  artifacts:
-    paths:
-      - public
-    expire_in: 30 days
-
 deploy_staging:
   image: ruby:latest
   only:
