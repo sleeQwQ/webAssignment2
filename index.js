@@ -1,18 +1,19 @@
+/* eslint-disable no-unused-vars */
 import dotenv from 'dotenv';
 import express from 'express';
 import moviesRouter from './api/movies';
 import bodyParser from 'body-parser';
 import loglevel from 'loglevel';
 import './db';
-import {loadUsers} from './seedData'
+import {loadUsers} from './seedData';
 import usersRouter from './api/users';
 
 dotenv.config();
 
 if (process.env.NODE_ENV === 'test') {
-  loglevel.setLevel('warn')
+  loglevel.setLevel('warn');
 } else {
-  loglevel.setLevel('info')
+  loglevel.setLevel('info');
 }
 
 if (process.env.SEED_DB === 'true' && process.env.NODE_ENV === 'development') {
@@ -31,6 +32,13 @@ const app = express();
 
 const port = process.env.PORT ;
 
+const YAML = require('yamljs');
+var swaggerUi=require('swagger-ui-express');
+const swaggerDocument = YAML.load('./swagger.yaml');
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+
+
 // if (process.env.NODE_ENV !== 'test') {  
 //   app.use(logger('dev'));
 // }
@@ -45,8 +53,10 @@ app.use('/api/users', usersRouter);
 
 app.use(errHandler);
 
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 let server = app.listen(port, () => {
   loglevel.info(`Server running at ${port}`);
 });
 
-module.exports = server
+module.exports = server;
