@@ -74,6 +74,7 @@ deploy_staging:
     - develop
     - master
   stage: deploy
+
   before_script:
     - apt-get update -qy
     - apt-get install -y ruby-dev
