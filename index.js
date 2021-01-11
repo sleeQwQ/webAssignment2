@@ -1,12 +1,15 @@
 /* eslint-disable no-unused-vars */
 import dotenv from 'dotenv';
 import express from 'express';
-import moviesRouter from './api/movies';
 import bodyParser from 'body-parser';
 import loglevel from 'loglevel';
 import './db';
-import {loadUsers} from './seedData';
+import {loadUsers, loadMovies} from './seedData';
+import moviesRouter from './api/movies';
 import usersRouter from './api/users';
+import genresRouter from './api/genres';
+import session from 'express-session';
+import passport from './authenticate';
 
 dotenv.config();
 
@@ -16,9 +19,11 @@ if (process.env.NODE_ENV === 'test') {
   loglevel.setLevel('info');
 }
 
-if (process.env.SEED_DB === 'true' && process.env.NODE_ENV === 'development') {
+if (process.env.SEED_DB) {
   loadUsers();
+  loadMovies();
 }
+
 const errHandler = (err, req, res, next) => {
   /* if the error in development then send stack trace to display whole error,
   if it's in production then just send error message  */
@@ -35,9 +40,13 @@ const port = process.env.PORT ;
 const YAML = require('yamljs');
 var swaggerUi=require('swagger-ui-express');
 const swaggerDocument = YAML.load('./swagger.yaml');
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-
+//session middleware
+app.use(session({
+  secret: 'ilikecake',
+  resave: true,
+  saveUninitialized: true
+}));
 
 // if (process.env.NODE_ENV !== 'test') {  
 //   app.use(logger('dev'));
@@ -45,11 +54,17 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 //configure body-parser
 app.use(bodyParser.json());
 
+app.use(bodyParser.urlencoded());
+
 app.use(express.static('public'));
 
-app.use('/api/movies', moviesRouter);
+app.use(passport.initialize());
+
+app.use('/api/movies', passport.authenticate('jwt', {session: false}), moviesRouter);
 
 app.use('/api/users', usersRouter);
+
+app.use('/api/genres', genresRouter);
 
 app.use(errHandler);
 
