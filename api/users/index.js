@@ -21,8 +21,8 @@ router.post('/', async (req, res, next) => {
   if (req.query.action === 'register') {
     const goodpwd = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{5,}$/;
     if (!req.body.password.match(goodpwd)) {
-      res.status(401).json({
-        code: 401,
+      res.status(412).json({
+        code: 412,
         msg: 'Register failed. Bad password.'
       });
     } else {
@@ -55,15 +55,16 @@ router.post('/', async (req, res, next) => {
 });
 
 // Update a user
-router.put('/:id',  (req, res ,next) => {
-    if (req.body._id) delete req.body._id;
-     User.update({
-      _id: req.params.id,
-    }, req.body, {
-      upsert: false,
-    })
-    .then(user => res.json(200, user))
-    .catch(next);
+router.put('/:userName', async (req, res ,next) => {
+  const userName = req.params.userName;
+  const user = await User.findByUserName(userName);
+  User.update({
+    _id: user._id,
+  }, req.body, {
+    upsert: false,
+  })
+  .then(res.status(200).json({ code: 200, msg: 'Update Successfully.' }))
+  .catch(next);
 });
 
 // eslint-disable-next-line no-unused-vars

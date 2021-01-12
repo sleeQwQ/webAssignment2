@@ -12,10 +12,10 @@ mongoose.connect(process.env.mongoDB, {
 const db = mongoose.connection;
 
 db.on("error", (err) => {
-  console.log(`database connection error: ${err}`);
+  loglevel.error(`database connection error: ${err}`);
 });
 db.on("disconnected", () => {
-  console.log("database disconnected");
+  loglevel.warn("database disconnected");
 });
 db.once("open", () => {
   loglevel.info(`database connected to ${db.name} on ${db.host}`);
