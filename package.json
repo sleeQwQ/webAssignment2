@@ -12,11 +12,12 @@
     "compile:api": "babel ./api/tmdb-api.js --out-dir build/api/",
     "compile:models": "npm-run-all compile:moviemodels compile:usermodels compile:genresmodels",
     "compile:seed": "babel ./seedData --out-dir build/seedData",
+    "compile:authenticate": "babel ./authenticate --out-dir build/authenticate",
     "compile:routes": "babel ./routes --out-dir build/routes ",
     "compile:app": "babel index.js --out-dir build/",
     "compile:db": "babel db.js --out-dir build/",
     "compile:copy": "cp -r ./node_modules/ build/node_modules && cp -r ./public build/public",
-    "compile:all": "npm-run-all compile:models compile:seed compile:app compile:db compile:api compile:copy",
+    "compile:all": "npm-run-all compile:models compile:seed compile:app compile:db compile:api compile:authenticate compile:copy",
     "postinstall": "rimraf ./build && npm run compile:all",
     "start": "nodemon --exec babel-node index.js",
     "test": "cross-env NODE_ENV=test mocha "
