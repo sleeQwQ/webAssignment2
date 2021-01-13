@@ -229,7 +229,9 @@ describe("Users endpoint", () => {
     //         expect(res.body).to.have.property("favourites");
     //         done();
     //       });
-    //     request(api)
+    //   });
+    //   after(()=>{
+    //     return request(api)
     //       .post("/api/users/user1/favourites")
     //       .send({
     //         id: `${sampleMovie.id}`,

@@ -18,7 +18,7 @@ router.post('/', async (req, res, next) => {
     await movieModel.create(newMovie).catch(next);
     res.status(201).send(newMovie);
   } else {
-    res.status(405).send({ code: 405,  msg: 'Please add a title' });
+    res.status(412).send({ code: 412,  msg: 'Please add a title' });
   }
 });
 
@@ -33,13 +33,13 @@ router.get('/:id', async (req, res, next) => {
 // Update a movie
 router.put('/:id', async (req, res, next) => {
   if (isNaN(req.params.id)) return res.status(404).json({ code: 404, msg: 'Invaild movie id.' });
-  const key = parseInt(req.params.id);
+  const id = parseInt(req.params.id);
   const updateMovie = req.body;
-  if (movieModel.findByMovieDBId(key)) {
-    !updateMovie.id ? updateMovie.id = key : updateMovie;
+  if (movieModel.findByMovieDBId(id)) {
+    !updateMovie.id ? updateMovie.id = id : updateMovie;
     if (req.body._id) delete req.body._id;
     await movieModel.findOneAndUpdate({_id: updateMovie._id}, updateMovie).catch(next);
-    res.status(200).json(updateMovie);
+    res.status(201).json(updateMovie);
   } else {
     res.status(404).send({ code: 404,  msg: 'The resource you requested could not be found.' });
   }

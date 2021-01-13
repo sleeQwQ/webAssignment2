@@ -88,6 +88,36 @@ describe("Movies endpoint", function (){
     });
   });
 
+  describe("POST /movies", () => {
+    describe("normal case", () => {
+      it("should return the new movie and a status 201", () => {
+        return request(api)
+        .post("/api/movies")
+        .set("Authorization", token)
+        .send({
+          title : "test",
+          contains : "test"
+        })
+        .expect(201)
+        .then((res) => {
+          expect(res.body).to.have.property("title","test");
+        });
+      });
+    });
+    describe("when no title", () => {
+      it("should return the message of asking for a title", () => {
+        return request(api)
+        .post("/api/movies")
+        .set("Authorization", token)
+        .send({
+          contains : "test"
+        })
+        .expect(412)
+        .expect({ code: 412,  msg: 'Please add a title' });
+      });
+    });
+  });
+
   describe("GET /movies/:id", () => {
     describe("when the id is valid", () => {
       it("should return the matching movie", () => {
@@ -120,6 +150,79 @@ describe("Movies endpoint", function (){
           .expect("Content-Type", /json/)
           .expect(404)
           .expect({code: 404, msg: 'The resource you requested could not be found.'});
+      });
+    });
+  });
+
+  describe("PUT /movies/:id", () => {
+    describe("when the id is valid", () => {
+      it("should return success message and a status 200", () => {
+        return request(api)
+          .put(`/api/movies/${sampleMovie.id}`)
+          .set("Authorization", token)
+          .send({
+            title : "test"
+          })
+          .expect(201)
+          .then((res) => {
+            expect(res.body).to.have.property("title","test");
+          });
+      });
+      // after(()=>{
+      //   return request(api)
+      //     .get(`/api/movies/${sampleMovie.id}`)
+      //     .set("Accept", "application/json")
+      //     .set("Authorization", token)
+      //     .expect("Content-Type", /json/)
+      //     .expect(200)
+      //     .then((res) => {
+      //       expect(res.body).to.have.property("title","test");
+      //     });
+      // });
+    });
+    describe("when the id is invalid", () => {
+      it("should return the invaild id message", () => {
+        return request(api)
+          .put(`/api/movies/xxx`)
+          .set("Authorization", token)
+          .send({
+            title : "test",
+          })
+          .expect("Content-Type", /json/)
+          .expect(404)
+          .expect({code: 404, msg: 'Invaild movie id.'});
+      });
+    });
+  });
+
+  describe("DELETE /movies/:id", () => {
+    describe("when the id is valid", () => {
+      it("should return success message and a status 200", () => {
+        return request(api)
+          .delete(`/api/movies/${sampleMovie.id}`)
+          .set("Authorization", token)
+          .expect("Content-Type", /json/)
+          .expect(200)
+          .expect({ code: 200, msg: 'Delete successfully'});
+      });
+      after(()=>{
+        return request(api)
+          .get(`/api/movies/${sampleMovie.id}`)
+          .set("Accept", "application/json")
+          .set("Authorization", token)
+          .expect("Content-Type", /json/)
+          .expect(404)
+          .expect({code: 404, msg: 'The resource you requested could not be found.'});
+      });
+    });
+    describe("when the id is invalid", () => {
+      it("should return the invaild id message", () => {
+        return request(api)
+          .delete(`/api/movies/xxx`)
+          .set("Authorization", token)
+          .expect("Content-Type", /json/)
+          .expect(404)
+          .expect({code: 404, msg: 'Invaild movie id.'});
       });
     });
   });
