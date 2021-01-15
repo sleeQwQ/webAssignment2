@@ -7,6 +7,7 @@ import './db';
 import {loadUsers, loadMovies} from './seedData';
 import moviesRouter from './api/movies';
 import usersRouter from './api/users';
+import authenticationRouter from './api/authentication';
 import genresRouter from './api/genres';
 import session from 'express-session';
 import passport from './authenticate';
@@ -59,6 +60,8 @@ app.use(bodyParser.urlencoded());
 app.use(express.static('public'));
 
 app.use(passport.initialize());
+
+app.use('/api/authentication', authenticationRouter);
 
 app.use('/api/movies', passport.authenticate('jwt', {session: false}), moviesRouter);
 

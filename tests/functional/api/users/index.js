@@ -55,6 +55,7 @@ describe("Users endpoint", () => {
     api.close();
     delete require.cache[require.resolve("../../../../index")];
   });
+
   describe("GET / ", () => {
     it("should return the 2 users and a status 200", (done) => {
       request(api)
@@ -69,106 +70,6 @@ describe("Users endpoint", () => {
           expect(result).to.have.members(["user1", "user2"]);
           done();
         });
-    });
-  });
-
-  describe("POST / ", () => {
-    describe("valid password", () => {
-      it("should return a 200 status and the confirmation message", () => {
-        return request(api)
-          .post("/api/users?action=register")
-          .send({
-            username: "user3",
-            password: "test3",
-          })
-          .expect(201)
-          .expect({ code: 201, msg: 'Successfully created new user.' });
-      });
-      after(() => {
-        return request(api)
-          .get("/api/users")
-          .set("Accept", "application/json")
-          .expect("Content-Type", /json/)
-          .expect(200)
-          .then((res) => {
-            expect(res.body).to.be.a("array");
-            expect(res.body.length).to.equal(3);
-            let result = res.body.map((user) => user.username);
-            expect(result).to.have.members(["user1", "user2", "user3"]);
-          });
-      });
-    });
-    describe("bad password", () => {
-      it("should return Register failed message when the password is bad", () => {
-        return request(api)
-          .post("/api/users?action=register")
-          .send({
-            username: "user4",
-            password: "badpassword",
-          })
-          .expect(412)
-          .expect({code: 412, msg: 'Register failed. Bad password.'});
-      });
-      after(() => {
-        return request(api)
-          .get("/api/users")
-          .set("Accept", "application/json")
-          .expect("Content-Type", /json/)
-          .expect(200)
-          .then((res) => {
-            expect(res.body).to.be.a("array");
-            expect(res.body.length).to.equal(2);
-            let result = res.body.map((user) => user.username);
-            expect(result).to.have.members(["user1", "user2"]);
-          });
-      });
-    });
-    describe("existing username", () => {
-      it("should return Register failed message with a existing username message", () => {
-        return request(api)
-          .post("/api/users?action=register")
-          .send({
-            username: "user1",
-            password: "test1",
-          })
-          .expect(412)
-          .expect({code: 412, msg: 'Already exists this user, please try another username.'});
-      });
-      after(() => {
-        return request(api)
-          .get("/api/users")
-          .set("Accept", "application/json")
-          .expect("Content-Type", /json/)
-          .expect(200)
-          .then((res) => {
-            expect(res.body).to.be.a("array");
-            expect(res.body.length).to.equal(2);
-            let result = res.body.map((user) => user.username);
-            expect(result).to.have.members(["user1", "user2"]);
-          });
-      });
-    });
-    describe("input nothing", () => {
-      it("should return the message to ask for input", () => {
-        return request(api)
-          .post("/api/users")
-          .send({})
-          .expect(401)
-          .expect({success: false, msg: 'Please pass username and password.'});
-      });
-      after(() => {
-        return request(api)
-          .get("/api/users")
-          .set("Accept", "application/json")
-          .expect("Content-Type", /json/)
-          .expect(200)
-          .then((res) => {
-            expect(res.body).to.be.a("array");
-            expect(res.body.length).to.equal(2);
-            let result = res.body.map((user) => user.username);
-            expect(result).to.have.members(["user1", "user2"]);
-          });
-      });
     });
   });
   
@@ -254,7 +155,6 @@ describe("Users endpoint", () => {
     });
   });
   
-
   describe("POST /userName/favourites ", () => {
     describe("normal case ", () => {
       it("should return the new info and a status 201", (done) => {
@@ -282,6 +182,14 @@ describe("Users endpoint", () => {
             expect(res.body[0]).to.have.property("favourites");
             expect(res.body[0].favourites).to.have.members([sampleMovie.id]);
           });
+      });
+    });
+    describe("no such user", () => {
+      it("should return a 404 status and the confirmation message", () => {
+        return request(api)
+          .delete("/api/users/xxxx")
+          .expect(404)
+          .expect({ code: 404, msg: 'User not found.' });
       });
     });
     describe("invaild id ", () => {

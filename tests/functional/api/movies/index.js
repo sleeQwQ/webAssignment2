@@ -55,7 +55,7 @@ describe("Movies endpoint", function (){
       loglevel.info(`failed to Load Data: ${err}`);
     }
     return request(api)
-        .post("/api/users")
+        .post("/api/authentication")
         .send({
           username: "user1",
           password: "test1",
