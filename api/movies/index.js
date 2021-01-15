@@ -48,9 +48,9 @@ router.put('/:id', async (req, res, next) => {
 // Delete a moive
 router.delete('/:id', async (req, res) => {
   if (isNaN(req.params.id)) return res.status(404).json({ code: 404, msg: 'Invaild movie id.' });
-  const key = parseInt(req.params.id);
-  if (movieModel.findByMovieDBId(key)) {
-    await movieModel.deleteOne({"id":key});
+  const id = parseInt(req.params.id);
+  if (movieModel.findByMovieDBId(id)) {
+    await movieModel.deleteOne({"id":id});
     res.status(200).send({ code: 200, msg: 'Delete successfully'});
   } else {
     res.status(404).send({ code: 404, msg: 'The resource you requested could not be found.'});

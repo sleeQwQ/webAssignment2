@@ -19,6 +19,8 @@ router.post('/', async (req, res, next) => {
     });
   }
   if (req.query.action === 'register') {
+    const user = await User.findByUserName(req.body.username).catch(next);
+    if (user) return res.status(412).json({ code: 412, msg: 'Already exists this user, please try another username.' });
     const goodpwd = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{5,}$/;
     if (!req.body.password.match(goodpwd)) {
       res.status(412).json({
@@ -54,17 +56,32 @@ router.post('/', async (req, res, next) => {
     }
 });
 
-// Update a user
-router.put('/:userName', async (req, res ,next) => {
+router.get('/:userName', async (req, res) => {
   const userName = req.params.userName;
   const user = await User.findByUserName(userName);
+  if (!user) return res.status(404).json({ code: 404, msg: 'User not found.' });
+  return res.status(200).send();
+});
+
+// Update a user
+router.put('/:userName', async (req, res) => {
+  const userName = req.params.userName;
+  const user = await User.findByUserName(userName);
+  if (!user) return res.status(404).json({ code: 404, msg: 'User not found.' });
   User.update({
     _id: user._id,
   }, req.body, {
     upsert: false,
   })
-  .then(res.status(200).json({ code: 200, msg: 'Update Successfully.' }))
-  .catch(next);
+  .then(res.status(200).json({ code: 200, msg: 'Update Successfully.' }));
+});
+
+router.delete('/:userName', async (req, res) => {
+  const userName = req.params.userName;
+  const user = await User.findByUserName(userName);
+  if (!user) return res.status(404).json({ code: 404, msg: 'User not found.' });
+  await User.deleteOne(user);
+    res.status(200).send({ code: 200, msg: 'Delete successfully'});
 });
 
 // eslint-disable-next-line no-unused-vars

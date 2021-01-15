@@ -87,8 +87,25 @@ describe("Movies endpoint", function (){
   });
 
   describe("POST /movies", () => {
-    describe("normal case", () => {
+    describe("post movie with id", () => {
       it("should return the new movie and a status 201", () => {
+        return request(api)
+        .post("/api/movies")
+        .set("Authorization", token)
+        .send({
+          id : 20091632,
+          title : "test",
+          contains : "test"
+        })
+        .expect(201)
+        .then((res) => {
+          expect(res.body).to.have.property("id",20091632);
+          expect(res.body).to.have.property("title","test");
+        });
+      });
+    });
+    describe("post movie without id", () => {
+      it("should generate id automatically", () => {
         return request(api)
         .post("/api/movies")
         .set("Authorization", token)
@@ -99,6 +116,7 @@ describe("Movies endpoint", function (){
         .expect(201)
         .then((res) => {
           expect(res.body).to.have.property("title","test");
+          expect(res.body).to.have.property("id");
         });
       });
     });
