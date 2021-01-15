@@ -1,12 +1,13 @@
 /* eslint-disable no-undef */
 import chai from "chai";
 import request from "supertest";
-import api from "../../../../index";
+import Movie from "../../../../api/movies/movieModel";
+import {movies} from '../../../../seedData/movies.js';
 import loglevel from 'loglevel';
 
 const expect = chai.expect;
 
-//let api;
+let api;
 let token;
 
 const sampleMovie = {
@@ -45,33 +46,30 @@ const sampleMovie = {
 };
 
 describe("Movies endpoint", function (){
-  this.timeout(6000);
-  before((done) => {
-    setTimeout(() => {
-      done();
-    },5000);
-  });
-  beforeEach((done) => {
+  beforeEach(async () => {
     try {
-      request(api)
-      .post("/api/users")
-      .send({
-        "username": "user1",
-        "password": "test1"
-      })
-      .end((err, res) => {
-        token = res.body.token;
-        done();
-      });
+      api = require("../../../../index");
+      await Movie.deleteMany();
+      await Movie.collection.insertMany(movies);
     } catch (err) {
-      loglevel.error(`failed to Load user Data: ${err}`);
-    }   
+      loglevel.info(`failed to Load Data: ${err}`);
+    }
+    return request(api)
+        .post("/api/users")
+        .send({
+          username: "user1",
+          password: "test1",
+        })
+        .expect(200)
+        .then((res) => {
+          token= res.body.token;
+        });
   });
-
   afterEach(() => {
     api.close(); // Release PORT 8080
     delete require.cache[require.resolve("../../../../index")];
   });
+  
   describe("GET /movies ", () => {
     it("should return 20 movies and a status 200", (done) => {
       request(api)
@@ -168,17 +166,17 @@ describe("Movies endpoint", function (){
             expect(res.body).to.have.property("title","test");
           });
       });
-      // after(()=>{
-      //   return request(api)
-      //     .get(`/api/movies/${sampleMovie.id}`)
-      //     .set("Accept", "application/json")
-      //     .set("Authorization", token)
-      //     .expect("Content-Type", /json/)
-      //     .expect(200)
-      //     .then((res) => {
-      //       expect(res.body).to.have.property("title","test");
-      //     });
-      // });
+      after(()=>{
+        return request(api)
+          .get(`/api/movies/${sampleMovie.id}`)
+          .set("Accept", "application/json")
+          .set("Authorization", token)
+          .expect("Content-Type", /json/)
+          .expect(200)
+          .then((res) => {
+            expect(res.body).to.have.property("title","test");
+          });
+      });
     });
     describe("when the id is invalid", () => {
       it("should return the invaild id message", () => {

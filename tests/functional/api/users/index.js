@@ -39,7 +39,7 @@ describe("Users endpoint", () => {
     try {
       await db.dropDatabase();
     } catch (error) {
-      loglevel.error(error);
+      loglevel.info(error);
     }
   });
   beforeEach(async () => {
@@ -188,6 +188,7 @@ describe("Users endpoint", () => {
           .expect(201)
           .end((err, res) => {
             expect(res.body).to.have.property("favourites");
+            expect(res.body.favourites).to.have.members([sampleMovie.id]);
             done();
           });
       });
@@ -199,6 +200,7 @@ describe("Users endpoint", () => {
           .expect(200)
           .then((res) => {
             expect(res.body[0]).to.have.property("favourites");
+            expect(res.body[0].favourites).to.have.members([sampleMovie.id]);
           });
       });
     });
@@ -218,21 +220,22 @@ describe("Users endpoint", () => {
     // describe("duplicated favourites movies ", () => {
     //   it("should return the duplicated info and a status 201", (done) => {
     //     request(api)
-    //       .post("/api/users/user1/favourites")
+    //       .post("/api/users/user2/favourites")
     //       .send({
     //         id: `${sampleMovie.id}`,
     //         title: `${sampleMovie.title}`
     //       })
     //       .expect("Content-Type", /json/)
     //       .expect(201)
-    //       .then((err, res) => {
+    //       .end((err, res) => {
     //         expect(res.body).to.have.property("favourites");
+    //         expect(res.body.favourites).to.have.members([sampleMovie.id]);
     //         done();
     //       });
     //   });
     //   after(()=>{
     //     return request(api)
-    //       .post("/api/users/user1/favourites")
+    //       .post("/api/users/user2/favourites")
     //       .send({
     //         id: `${sampleMovie.id}`,
     //         title: `${sampleMovie.title}`

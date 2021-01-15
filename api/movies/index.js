@@ -38,7 +38,7 @@ router.put('/:id', async (req, res, next) => {
   if (movieModel.findByMovieDBId(id)) {
     !updateMovie.id ? updateMovie.id = id : updateMovie;
     if (req.body._id) delete req.body._id;
-    await movieModel.findOneAndUpdate({_id: updateMovie._id}, updateMovie).catch(next);
+    await movieModel.findOneAndUpdate({id: updateMovie.id}, updateMovie).catch(next);
     res.status(201).json(updateMovie);
   } else {
     res.status(404).send({ code: 404,  msg: 'The resource you requested could not be found.' });

@@ -74,13 +74,13 @@ router.post('/:userName/favourites', async (req, res, next) => {
   const movie = await movieModel.findByMovieDBId(newFavourite);
   if (!movie) return res.status(401).json({ code: 401, msg: 'Invaild movie id.' });
   const user = await User.findByUserName(userName);
-  if (user.favourites.indexOf(movie._id) === -1) {
-    await user.favourites.push(movie._id);
+  if (user.favourites.indexOf(movie.id) === -1) {
+    await user.favourites.push(movie.id);
+    await user.save(); 
+    return res.status(201).json(user); 
   } else {
-    res.status(201).json({ msg: 'Already have this movie', user}); 
+    return res.status(201).json({ msg: 'Alreday have this movie', user }); 
   }
-  await user.save(); 
-  res.status(201).json(user); 
 });
 
 router.get('/:userName/favourites', (req, res, next) => {

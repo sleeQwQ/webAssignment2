@@ -22,7 +22,7 @@ export async function loadUsers() {
       await users.forEach(user => userModel.create(user));
       loglevel.info(`${users.length} users were successfully stored.`);
     } catch (err) {
-      loglevel.error(`failed to Load user Data: ${err}`);
+      loglevel.info(`failed to Load user Data: ${err}`);
     }
   }
 
@@ -35,6 +35,6 @@ export async function loadMovies() {
     await movieModel.collection.insertMany(movies);
     loglevel.info(`${movies.length} Movies were successfully stored.`);
   } catch (err) {
-    loglevel.error(`failed to Load movie Data: ${err}`);
+    loglevel.info(`failed to Load movie Data: ${err}`);
   }
 }
