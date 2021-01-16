@@ -276,15 +276,15 @@ describe("Users endpoint", () => {
   });
 
   describe("DELETE /userName/favourites/id ", () => {
-    describe("normal case", () =>{
-      before(() =>{
-        request(api)
-        .post("/api/users/user1/favourites")
-        .send({
-          id: `${sampleMovie.id}`,
-          title: `${sampleMovie.title}`
-        });
+    beforeEach(() =>{
+      request(api)
+      .post("/api/users/user1/favourites")
+      .send({
+        id: `${sampleMovie.id}`,
+        title: `${sampleMovie.title}`
       });
+    });
+    describe("normal case", () =>{
       it("should delete that movie in favourites",() =>{
         request(api)
         .delete(`/api/users/user1/favourites/${sampleMovie.id}`)
@@ -292,7 +292,7 @@ describe("Users endpoint", () => {
         .expect(200)
         .expect({ code: 200, msg: 'Delete successfully'});
       });
-      before(() =>{
+      after(() =>{
         request(api)
         .get("/api/users/user1/favourites")
         .expect("Content-Type", /json/)
@@ -309,13 +309,22 @@ describe("Users endpoint", () => {
         .expect({ code: 404, msg: 'User not found.' });
       });
     });
-    describe("no such movie", () =>{
+    describe("invaild movie id", () =>{
       it("should return a 404 status and the confirmation message", () => {
         request(api)
         .delete(`/api/users/user1/favourites/xxx`)
         .expect("Content-Type", /json/)
         .expect(404)
         .expect({ code: 404, msg: 'Invaild movie id.' });
+      });
+    });
+    describe("the input movie is not in favourites", () =>{
+      it("should return a 404 status and the confirmation message", () => {
+        request(api)
+        .delete(`/api/users/user1/favourites/111`)
+        .expect("Content-Type", /json/)
+        .expect(404)
+        .expect({ code: 404, msg: "This movie is not in favourites."});
       });
     });
   });
@@ -436,15 +445,15 @@ describe("Users endpoint", () => {
   });
 
   describe("DELETE /userName/watchlist/id ", () => {
-    describe("normal case", () =>{
-      before(() =>{
-        request(api)
-        .post("/api/users/user1/watchlist")
-        .send({
-          id: `${sampleUpcoming.id}`,
-          title: `${sampleUpcoming.title}`
-        });
+    beforeEach(() =>{
+      request(api)
+      .post("/api/users/user1/watchlist")
+      .send({
+        id: `${sampleUpcoming.id}`,
+        title: `${sampleUpcoming.title}`
       });
+    });
+    describe("normal case", () =>{
       it("should delete that movie in watch list",() =>{
         request(api)
         .delete(`/api/users/user1/watchlist/${sampleUpcoming.id}`)
@@ -452,7 +461,7 @@ describe("Users endpoint", () => {
         .expect(200)
         .expect({ code: 200, msg: 'Delete successfully'});
       });
-      before(() =>{
+      after(() =>{
         request(api)
         .get("/api/users/user1/watchlist")
         .expect("Content-Type", /json/)
@@ -469,13 +478,22 @@ describe("Users endpoint", () => {
         .expect({ code: 404, msg: 'User not found.' });
       });
     });
-    describe("no such movie", () =>{
+    describe("invaild movie id", () =>{
       it("should return a 404 status and the confirmation message", () => {
         request(api)
         .delete(`/api/users/user1/watchlist/xxx`)
         .expect("Content-Type", /json/)
         .expect(404)
         .expect({ code: 404, msg: 'Invaild movie id.' });
+      });
+    });
+    describe("the input movie is not in watchlist", () =>{
+      it("should return a 404 status and the confirmation message", () => {
+        request(api)
+        .delete(`/api/users/user1/favourites/111`)
+        .expect("Content-Type", /json/)
+        .expect(404)
+        .expect({ code: 404, msg: "This movie is not in watch list."});
       });
     });
   });

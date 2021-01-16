@@ -68,7 +68,12 @@ router.delete('/:userName/favourites/:id', async (req, res) => {
   if (!user) return res.status(404).json({ code: 404, msg: 'User not found.' });
   if (isNaN(req.params.id)) return res.status(404).json({ code: 404, msg: 'Invaild movie id.' });
   const id = parseInt(req.params.id);
-  await user.removeFavourites(id);
+  const movie = await movieModel.findByMovieDBId(id);
+  if (user.favourites.indexOf(movie.id) !== -1) {
+    await user.removeFromFavourites(id);
+  } else {
+    return res.status(404).json({ code: 404, msg: "This movie is not in favourites."});
+  }
   await user.save(); 
   res.status(200).send({ code: 200, msg: 'Delete successfully'});
 });
@@ -85,7 +90,7 @@ router.post('/:userName/watchlist', async (req, res) => {
     await user.save(); 
     return res.status(201).json(user); 
   } else {
-    return res.status(201).json({ msg: 'Alreday have this movie', user }); 
+    return res.status(201).json({  code: 404, msg: 'Alreday have this movie', user }); 
   }
 });
 
@@ -102,7 +107,12 @@ router.delete('/:userName/watchlist/:id', async (req, res) => {
   if (!user) return res.status(404).json({ code: 404, msg: 'User not found.' });
   if (isNaN(req.params.id)) return res.status(404).json({ code: 404, msg: 'Invaild movie id.' });
   const id = parseInt(req.params.id);
-  await user.removeFromWatchList(id);
+  const movie = await movieModel.findByMovieDBId(id);
+  if (user.watchlist.indexOf(movie.id) !== -1) {
+    await user.removeFromWatchlist(id);
+  } else {
+    return res.status(404).json({ code: 404, msg: "This movie is not in watch list."});
+  }
   await user.save(); 
   res.status(200).send({ code: 200, msg: 'Delete successfully'});
 });
