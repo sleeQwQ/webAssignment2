@@ -6,7 +6,8 @@ const Schema = mongoose.Schema;
 const UserSchema = new Schema({
   username: { type: String, unique: true, required: true},
   password: {type: String, required: true },
-  favourites: [{type: Number, ref: 'Movies'}]
+  favourites: [{type: Number, ref: 'Movies'}],
+  watchlist: [{type: Number, ref: 'Upcoming'}]
 });
 
 UserSchema.statics.findByUserName = function (username) {
@@ -20,6 +21,16 @@ UserSchema.methods.comparePassword = function(passw, cb) {
       }
       cb(null, isMatch);
   });
+};
+
+UserSchema.methods.removeFavourites = function(id) {
+  const index = this.favourites.indexOf(id);
+  this.favourites.splice(index,1);
+};
+
+UserSchema.methods.removeFromWatchList = function(id) {
+  const index = this.watchlist.indexOf(id);
+  this.watchlist.splice(index,1);
 };
 
 UserSchema.pre('save', function(next) {

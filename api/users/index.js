@@ -1,6 +1,7 @@
 import express from 'express';
 import User from './userModel';
 import movieModel from '../movies/movieModel';
+import upcomingModel from '../upcoming/upcomingModel';
 
 const router = express.Router(); // eslint-disable-line
 
@@ -54,11 +55,56 @@ router.post('/:userName/favourites', async (req, res, next) => {
   }
 });
 
-router.get('/:userName/favourites', (req, res, next) => {
+router.get('/:userName/favourites', async (req, res) => {
   const userName = req.params.userName;
-  User.findByUserName(userName).populate('favourites').then(
-    user => res.status(201).json(user.favourites)
-  ).catch(next);
+  const user = await User.findByUserName(userName);
+  if (!user) return res.status(404).json({ code: 404, msg: 'User not found.' });
+  res.status(201).json(user.favourites);
+});
+
+router.delete('/:userName/favourites/:id', async (req, res) => {
+  const userName = req.params.userName;
+  const user = await User.findByUserName(userName);
+  if (!user) return res.status(404).json({ code: 404, msg: 'User not found.' });
+  if (isNaN(req.params.id)) return res.status(404).json({ code: 404, msg: 'Invaild movie id.' });
+  const id = parseInt(req.params.id);
+  await user.removeFavourites(id);
+  await user.save(); 
+  res.status(200).send({ code: 200, msg: 'Delete successfully'});
+});
+
+router.post('/:userName/watchlist', async (req, res) => {
+  const listMovie = req.body.id;
+  const userName = req.params.userName;
+  const movie = await upcomingModel.findByMovieDBId(listMovie);
+  if (!movie) return res.status(401).json({ code: 401, msg: 'Invaild movie id.' });
+  const user = await User.findByUserName(userName);
+  if (!user) return res.status(404).json({ code: 404, msg: 'User not found.' });
+  if (user.watchlist.indexOf(movie.id) === -1) {
+    await user.watchlist.push(movie.id);
+    await user.save(); 
+    return res.status(201).json(user); 
+  } else {
+    return res.status(201).json({ msg: 'Alreday have this movie', user }); 
+  }
+});
+
+router.get('/:userName/watchlist', async (req, res) => {
+  const userName = req.params.userName;
+  const user = await User.findByUserName(userName);
+  if (!user) return res.status(404).json({ code: 404, msg: 'User not found.' });
+  res.status(201).json(user.watchlist);
+});
+
+router.delete('/:userName/watchlist/:id', async (req, res) => {
+  const userName = req.params.userName;
+  const user = await User.findByUserName(userName);
+  if (!user) return res.status(404).json({ code: 404, msg: 'User not found.' });
+  if (isNaN(req.params.id)) return res.status(404).json({ code: 404, msg: 'Invaild movie id.' });
+  const id = parseInt(req.params.id);
+  await user.removeFromWatchList(id);
+  await user.save(); 
+  res.status(200).send({ code: 200, msg: 'Delete successfully'});
 });
 
 export default router;

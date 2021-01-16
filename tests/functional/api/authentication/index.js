@@ -281,4 +281,44 @@ describe("Authentication", () => {
         });
       });
     });
+    describe("Upcoming routers",() => {      
+      describe("GET /upcoming ", () => {
+        it("should return unauthorised", () => {
+          request(api)
+            .get("/api/upcoming")
+            .set("Accept", "application/json")
+            .expect("Content-Type", /json/)
+            .expect(401);
+        });
+      });
+    
+      describe("POST /upcoming", () => {
+        it("should return unauthorised", () => {
+          return request(api)
+          .post("/api/upcoming")
+          .send({
+            id : 20091632,
+            title : "test",
+            contains : "test"
+          })
+          .expect(401);
+        });
+      });
+    
+      describe("GET /upcoming/:id", () => {
+        it("should return unauthorised", () => {
+          return request(api)
+          .get(`/api/upcoming/${sampleMovie.id}`)
+          .expect(401);
+        });
+      });
+    
+      describe("DELETE /upcoming/:id", () => {
+        it("should return unauthorised", () => {
+          return request(api)
+          .delete(`/api/upcoming/${sampleMovie.id}`)
+          .expect(401);
+        });
+      });
+    });
 });

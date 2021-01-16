@@ -4,9 +4,10 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import loglevel from 'loglevel';
 import './db';
-import {loadUsers, loadMovies} from './seedData';
+import {loadUsers, loadMovies, loadUpcoming} from './seedData';
 import moviesRouter from './api/movies';
 import usersRouter from './api/users';
+import upcomingRouter from './api/upcoming';
 import authenticationRouter from './api/authentication';
 import genresRouter from './api/genres';
 import session from 'express-session';
@@ -23,6 +24,7 @@ if (process.env.NODE_ENV === 'test') {
 if (process.env.SEED_DB) {
   loadUsers();
   loadMovies();
+  loadUpcoming();
 }
 
 const errHandler = (err, req, res, next) => {
@@ -64,6 +66,8 @@ app.use(passport.initialize());
 app.use('/api/authentication', authenticationRouter);
 
 app.use('/api/movies', passport.authenticate('jwt', {session: false}), moviesRouter);
+
+app.use('/api/upcoming', passport.authenticate('jwt', {session: false}), upcomingRouter);
 
 app.use('/api/users', usersRouter);
 
