@@ -59,7 +59,7 @@ router.get('/:userName/favourites', async (req, res) => {
   const userName = req.params.userName;
   const user = await User.findByUserName(userName);
   if (!user) return res.status(404).json({ code: 404, msg: 'User not found.' });
-  res.status(201).json(user.favourites);
+  res.status(200).json(user.favourites);
 });
 
 router.delete('/:userName/favourites/:id', async (req, res) => {
@@ -93,7 +93,7 @@ router.get('/:userName/watchlist', async (req, res) => {
   const userName = req.params.userName;
   const user = await User.findByUserName(userName);
   if (!user) return res.status(404).json({ code: 404, msg: 'User not found.' });
-  res.status(201).json(user.watchlist);
+  res.status(200).json(user.watchlist);
 });
 
 router.delete('/:userName/watchlist/:id', async (req, res) => {

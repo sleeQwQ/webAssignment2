@@ -179,13 +179,11 @@ describe("Users endpoint", () => {
       });
       after(() => {
         return request(api)
-          .get("/api/users")
-          .set("Accept", "application/json")
+          .get("/api/users/user1/favourites")
           .expect("Content-Type", /json/)
           .expect(200)
           .then((res) => {
-            expect(res.body[0]).to.have.property("favourites");
-            expect(res.body[0].favourites).to.have.members([sampleMovie.id]);
+            expect(res.body).to.have.members([sampleMovie.id]);
           });
       });
     });
@@ -341,14 +339,12 @@ describe("Users endpoint", () => {
       });
       after(() => {
         return request(api)
-          .get("/api/users")
-          .set("Accept", "application/json")
-          .expect("Content-Type", /json/)
-          .expect(200)
-          .then((res) => {
-            expect(res.body[0]).to.have.property("watchlist");
-            expect(res.body[0].watchlist).to.have.members([sampleUpcoming.id]);
-          });
+        .get("/api/users/user1/watchlist")
+        .expect("Content-Type", /json/)
+        .expect(200)
+        .then((res) => {
+          expect(res.body).to.have.members([sampleUpcoming.id]);
+        });
       });
     });
     describe("no such user", () => {
@@ -424,7 +420,7 @@ describe("Users endpoint", () => {
         .expect("Content-Type", /json/)
         .expect(200)
         .then((res) => {
-          expect(res.body[0]).to.have.property("id",sampleUpcoming.id);
+          expect(res.body).to.have.members([sampleUpcoming.id]);
         });
       });
     });
