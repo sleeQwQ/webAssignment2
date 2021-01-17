@@ -65,7 +65,7 @@ app.use(passport.initialize());
 
 app.use('/api/authentication', authenticationRouter);
 
-app.use('/api/movies', passport.authenticate('jwt', {session: false}), moviesRouter);
+app.use('/api/movies', moviesRouter);
 
 app.use('/api/upcoming', passport.authenticate('jwt', {session: false}), upcomingRouter);
 
