@@ -222,65 +222,6 @@ describe("Authentication", () => {
             });
         });
     });
-    describe("Movies routers",() => {      
-      describe("GET /movies ", () => {
-        it("should return unauthorised", () => {
-          request(api)
-            .get("/api/movies")
-            .set("Accept", "application/json")
-            .expect("Content-Type", /json/)
-            .expect(401);
-        });
-      });
-    
-      describe("POST /movies", () => {
-        it("should return unauthorised", () => {
-          return request(api)
-          .post("/api/movies")
-          .send({
-            id : 20091632,
-            title : "test",
-            contains : "test"
-          })
-          .expect(401);
-        });
-      });
-    
-      describe("GET /movies/:id", () => {
-        it("should return unauthorised", () => {
-          return request(api)
-          .get(`/api/movies/${sampleMovie.id}`)
-          .expect(401);
-        });
-      });
-    
-      describe("PUT /movies/:id", () => {
-        it("should return unauthorised", () => {
-          return request(api)
-          .put(`/api/movies/${sampleMovie.id}`)
-          .send({
-            title : "test"
-          })
-          .expect(401);
-        });
-      });
-    
-      describe("DELETE /movies/:id", () => {
-        it("should return unauthorised", () => {
-          return request(api)
-          .delete(`/api/movies/${sampleMovie.id}`)
-          .expect(401);
-        });
-      });
-    
-      describe("GET /movies/:id/reviews", () => {
-        it("should return unauthorised", () => {
-          return request(api)
-          .get(`/api/movies/${sampleMovie.id}/reviews`)
-          .expect(401);
-        });
-      });
-    });
     describe("Upcoming routers",() => {      
       describe("GET /upcoming ", () => {
         it("should return unauthorised", () => {

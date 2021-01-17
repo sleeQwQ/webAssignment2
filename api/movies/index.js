@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import express from 'express';
-import { getMovieReviews } from '../tmdb-api';
+import { getMovieReviews, getMovie } from '../tmdb-api';
 import movieModel from './movieModel';
 
 const router = express.Router();
@@ -25,7 +25,7 @@ router.post('/', async (req, res, next) => {
 router.get('/:id', async (req, res, next) => {
   if (isNaN(req.params.id)) return res.status(404).json({ code: 404, msg: 'Invaild movie id.' });
   const id = parseInt(req.params.id);
-  const movie = await movieModel.findByMovieDBId(id);
+  const movie = await getMovie(id);
   if (!movie) return res.status(404).json({ code: 404, msg: 'The resource you requested could not be found.' });
   res.status(200).json(movie);
 });
