@@ -74,15 +74,15 @@ app.use('/api/movies', moviesRouter);
 
 app.use('/api/upcoming', passport.authenticate('jwt', {session: false}), upcomingRouter);
 
-app.use('/api/users', usersRouter);
+app.use('/api/users', passport.authenticate('jwt', {session: false}), usersRouter);
 
 app.use('/api/genres', genresRouter);
 
-app.use('/api/nowplaying', nowPlayingRouter);
+app.use('/api/nowplaying', passport.authenticate('jwt', {session: false}), nowPlayingRouter);
 
-app.use('/api/toprated', topRatedRouter);
+app.use('/api/toprated', passport.authenticate('jwt', {session: false}), topRatedRouter);
 
-app.use('/api/latest', latestRouter);
+app.use('/api/latest', passport.authenticate('jwt', {session: false}), latestRouter);
 
 app.use(errHandler);
 

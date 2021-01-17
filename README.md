@@ -61,6 +61,10 @@ secret=YourJWTSecret
 
 # Protected routes
  + /api/upcoming/
+ + /api/users/
+ + /api/nowplaying/
+ + /api/toprated/
+ + /api/latest/
 
 ## Integrating with React App
 

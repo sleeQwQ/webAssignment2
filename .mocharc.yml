@@ -1,5 +1,0 @@
-spec:
-    - 'tests/functional/api/**/index.js'
-require: '@babel/register'
-exit: true
-timeout: 4000
