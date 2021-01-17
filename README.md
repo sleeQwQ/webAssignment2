@@ -4,10 +4,13 @@ Name: Yannan Qian
 
 ## Features.
  
- + Feature 1 - Several additional endpoints
- + Feature 2 - Detailed error handling, robustness testing and json messages
- + Feature 3 - Swagger graphic API design
- + Feature 4 - Cloud based Mongodb database
+ + Feature 1 - Several additional endpoints with parameterised URLs
+ + Feature 2 - Cloud based Mongodb database
+ + Feature 3 - React integrations: all requests used in Assignment one
+ + Feature 4 - Authentication and protected routes
+ + Feature 5 - Detailed error handling, robustness testing and json messages
+ + Feature 6 - API documentation, Swagger graphic API design
+
 
 ## Installation Requirements
 
@@ -69,6 +72,8 @@ secret=YourJWTSecret
 ## Integrating with React App
 
 React url: https://github.com/sleeQwQ/wad2-moviesApp
+
+Not fetch data directly from TMDB, but get it by requesting from this api.
 
 # Integration example
 
