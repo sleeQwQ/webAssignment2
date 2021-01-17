@@ -6,7 +6,7 @@ Name: Yannan Qian
  
  + Feature 1 - Several additional endpoints with parameterised URLs
  + Feature 2 - Cloud based Mongodb database
- + Feature 3 - React integrations: all requests used in Assignment one
+ + Feature 3 - React integrations: all requests used in Assignment1
  + Feature 4 - Authentication and protected routes
  + Feature 5 - Detailed error handling, robustness testing and json messages
  + Feature 6 - API documentation, Swagger graphic API design
