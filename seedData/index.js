@@ -1,8 +1,10 @@
 import userModel from '../api/users/userModel';
 import movieModel from '../api/movies/movieModel';
 import upcomingModel from '../api/upcoming/upcomingModel';
+import nowPlayingModel from '../api/nowPlaying/nowPlayingModel';
+import topRatedModel from '../api/topRated/topRatedModel';
 import loglevel from 'loglevel';
-import {getMovies, getUpcomingMovies} from '../api/tmdb-api';
+import {getMovies, getUpcomingMovies, getPlayingMovies, getTopRated} from '../api/tmdb-api';
 
 const users = [
   {
@@ -52,5 +54,33 @@ export async function loadUpcoming() {
     });
   } catch (err) {
     loglevel.info(`failed to Load upcoming movie Data: ${err}`);
+  }
+}
+
+// deletes all nowplaying movies documents in collection and inserts test data
+export async function loadNowPlaying() {
+  loglevel.info('load seed data');
+  try {
+    getPlayingMovies().then(async res => {
+    await nowPlayingModel.deleteMany();
+    await nowPlayingModel.collection.insertMany(res);
+    loglevel.info(`${res.length} nowplaying movies were successfully stored.`);
+    });
+  } catch (err) {
+    loglevel.info(`failed to Load nowplaying movie Data: ${err}`);
+  }
+}
+
+// deletes all toprated movies documents in collection and inserts test data
+export async function loadTopRated() {
+  loglevel.info('load seed data');
+  try {
+    getTopRated().then(async res => {
+    await topRatedModel.deleteMany();
+    await topRatedModel.collection.insertMany(res);
+    loglevel.info(`${res.length} toprated movies were successfully stored.`);
+    });
+  } catch (err) {
+    loglevel.info(`failed to Load toprated movie Data: ${err}`);
   }
 }
