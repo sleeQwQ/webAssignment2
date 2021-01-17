@@ -40,16 +40,20 @@ secret=YourJWTSecret
 | /api/movies/{movieid}/reviews | Get all reviews for movie | N/A | N/A | N/A  
 | /api/upcoming | Get a list of upcoming movies | Post a new upcoming movie| N/A | N/A
 | /api/upcoming/{movieid} | Get an upcoming movie by id | N/A | N/A | Delete that movie from upcoming list
-| /api/users | Get all users | Log in or register | N/A | N/A
+| /api/authentication | N/A | Log in or register | N/A | N/A
+| /api/users | Get all users | N/A | N/A | N/A
 | /api/users/{username} | Get user by name | N/A | Update that user's info | Delete that user
 | /api/users/{username}/favourites | Get user's favourites list | Add a movie to one's favourite list | N/A | N/A
 | /api/users/{username}/favourites/{movieid} | N/A | N/A | N/A | Delete a movie by id from one's favourite list
 | /api/users/{username}/watchlist | Get user's watch list | Add a movie to one's watch list | N/A | N/A
 | /api/users/{username}/watchlist/{movieid} | N/A | N/A | N/A | Delete a movie by id from one's watch list
-| /api/genres | Get all genres | Post a new movie | N/A | N/A
+| /api/genres | Get all genres | N/A | N/A | N/A
+| /api/nowplaying | Get all nowplaying movies | N/A | N/A | N/A
+| /api/toprated | Get all toprated movies | N/A | N/A | N/A
+| /api/latest | Get the latest movie | N/A | N/A | N/A
 
 
-If you have your API design on an online platform or graphic, please link to it (e.g. [Swaggerhub](https://app.swaggerhub.com/)).
+[Swaggerhub] (https://app.swaggerhub.com/apis/sleeQwQ/MoviesAPI/1.0.0)
 
 
 ## Security and Authentication

@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import express from 'express';
-import { getMovieReviews, getMovie } from '../tmdb-api';
+import { getMovieReviews, getMovie, getSimilarMovies } from '../tmdb-api';
 import movieModel from './movieModel';
 
 const router = express.Router();
@@ -61,8 +61,16 @@ router.get('/:id/reviews', async (req, res, next) => {
   if (isNaN(req.params.id)) return res.status(404).json({ code: 404, msg: 'Invaild movie id.' });
   const id = parseInt(req.params.id);
   const reviews = await getMovieReviews(id);
-  if (reviews == "") return res.status(404).json({ code: 404, msg: 'No reviews yet in this movie.' });
+  //if (reviews == "") return res.status(404).json({ code: 404, msg: 'No reviews yet in this movie.' });
   res.status(200).json(reviews);
+});
+
+router.get('/:id/similars', async (req, res, next) => {
+  if (isNaN(req.params.id)) return res.status(404).json({ code: 404, msg: 'Invaild movie id.' });
+  const id = parseInt(req.params.id);
+  const movies = await getSimilarMovies(id);
+  if (movies == "") return res.status(404).json({ code: 404, msg: 'No similar movies of this movie.' });
+  res.status(200).json(movies);
 });
 
 export default router;

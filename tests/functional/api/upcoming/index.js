@@ -2,7 +2,6 @@
 import chai from "chai";
 import request from "supertest";
 import Upcoming from "../../../../api/upcoming/upcomingModel";
-import {upcomings} from '../../../../seedData/upcoming.js';
 import loglevel from 'loglevel';
 
 const expect = chai.expect;

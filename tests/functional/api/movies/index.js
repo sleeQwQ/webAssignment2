@@ -2,7 +2,6 @@
 import chai from "chai";
 import request from "supertest";
 import Movie from "../../../../api/movies/movieModel";
-import {movies} from '../../../../seedData/movies.js';
 import loglevel from 'loglevel';
 
 const expect = chai.expect;

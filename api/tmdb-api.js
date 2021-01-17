@@ -37,6 +37,13 @@ export const getMovies = () => {
       .then(json => json.results);
   };
 
+  export const getLatestMovie = () => {
+    return fetch(
+      `https://api.themoviedb.org/3/movie/latest?api_key=${process.env.TMDB_KEY}&language=en-US`
+    )
+      .then(res => res.json());
+  };
+
   export const getPlayingMovies = () => {
     return fetch(
       `https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.TMDB_KEY}&language=en-US&page=1`

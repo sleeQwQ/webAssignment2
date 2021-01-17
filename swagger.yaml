@@ -10,16 +10,23 @@ info:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
 host: localhost:8080
-basePath: /api/
+basePath: /api
 tags:
 - name: movies
   description: Everything about movies
 - name: upcoming
   description: About upcoming movies
+- name: authentication
+  description: Login or register
 - name: users
   description: Operations about user
 - name: genres
   description: Access to genres
+- name: nowplaying
+  description: About upcoming movies
+- name: toprated
+  description: About upcoming movies
+
 
 schemes:
 - https
@@ -42,10 +49,6 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Movie'
-        "401":
-          description: Unauthorised. 
-      security:
-      - Bearer and jwt stragies: []
     post:
       tags:
       - movies
@@ -70,12 +73,8 @@ paths:
           description: Success
           schema:
             $ref: '#/definitions/Movie'
-        "401":
-          description: Unauthorised. 
         "412":
           description: No title.
-      security:
-      - Bearer and jwt stragies: []
   /movies/{id}:
     get:
       tags:
@@ -96,12 +95,8 @@ paths:
           description: Success
           schema:
             $ref: '#/definitions/Movie'
-        "401":
-          description: Unauthorised. 
         "404":
           description: Invaild id or no this movie.
-      security:
-      - Bearer and jwt stragies: []
     put:
       tags:
       - movies
@@ -121,12 +116,8 @@ paths:
           description: Success
           schema:
             $ref: '#/definitions/Movie'
-        "401":
-          description: Unauthorised. 
         "404":
           description: Invaild id or no this movie.
-      security:
-      - Bearer and jwt stragies: []
     delete:
       tags:
       - movies
@@ -144,12 +135,8 @@ paths:
       responses:
         "200":
           description: Success
-        "401":
-          description: Unauthorised. 
         "404":
           description: Invaild id or no this movie.
-      security:
-      - Bearer and jwt stragies: []
   /movies/{id}/reviews:
     get:
       tags:
@@ -168,12 +155,8 @@ paths:
       responses:
         "200":
           description: Success
-        "401":
-          description: Unauthorised. 
         "404":
           description: Invaild id or no this movie, or no reviews on this movie.
-      security:
-      - Bearer and jwt stragies: []
   /upcoming:
     get:
       tags:
@@ -274,26 +257,10 @@ paths:
           description: Invaild id or no this movie.
       security:
       - Bearer and jwt stragies: []
-  /users:
-    get:
-      tags:
-      - users
-      summary: get users from database
-      consumes:
-      - application/json
-      produces:
-      - application/json
-      parameters: []
-      responses:
-        "200":
-          description: Success
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/User'
+  /authentication:
     post:
       tags:
-      - users
+      - authentication
       summary: login in or register
       consumes:
       - application/json
@@ -334,6 +301,23 @@ paths:
           description: Authentication failed
         "412":
           description: Register failed
+  /users:
+    get:
+      tags:
+      - users
+      summary: get users from database
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters: []
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
   /users/{username}:    
     get:
       tags:
@@ -553,7 +537,41 @@ paths:
       responses:
         "200":
           description: Success
-
+  /nowplaying:
+    get:
+      tags:
+      - nowplaying
+      summary: get nowplaying movies
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters: []
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Movie'
+  /toprated:
+    get:
+      tags:
+      - toprated
+      summary: get toprated movies
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters: []
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Movie'
+              
 securityDefinitions:
   Bearer:
     type: apiKey
@@ -661,6 +679,102 @@ definitions:
         type: string
     xml:
       name: Upcoming
+  NowPlaying:
+    type: object
+    required:
+    - id
+    properties:
+      adult:
+        type: boolean
+      id:
+        type: number
+        format: int64
+      poster_path:
+        type: string
+      overview:
+        type: string
+        example: it's a good one
+      release_date:
+        type: string
+        format: date
+      original_title:
+        type: string
+      genre_ids:
+        type: array
+        items:
+          type: number
+      original_language:
+        type: string
+      title:
+        type: string
+      backdrop_path:
+        type: string
+      popularity:
+        type: number
+      vote_count:
+        type: number
+      video:
+        type: boolean
+      vote_average:
+        type: number
+      production_countries:
+        $ref: '#/definitions/production_countries'
+      runtime:
+        type: number
+      spoken_languages:
+        $ref: '#/definitions/spoken_languages'
+      status:
+        type: string
+      tagline:
+        type: string
+  TopRated:
+    type: object
+    required:
+    - id
+    properties:
+      adult:
+        type: boolean
+      id:
+        type: number
+        format: int64
+      poster_path:
+        type: string
+      overview:
+        type: string
+        example: it's a good one
+      release_date:
+        type: string
+        format: date
+      original_title:
+        type: string
+      genre_ids:
+        type: array
+        items:
+          type: number
+      original_language:
+        type: string
+      title:
+        type: string
+      backdrop_path:
+        type: string
+      popularity:
+        type: number
+      vote_count:
+        type: number
+      video:
+        type: boolean
+      vote_average:
+        type: number
+      production_countries:
+        $ref: '#/definitions/production_countries'
+      runtime:
+        type: number
+      spoken_languages:
+        $ref: '#/definitions/spoken_languages'
+      status:
+        type: string
+      tagline:
+        type: string
   User:
     type: object
     required:
@@ -695,4 +809,3 @@ definitions:
         type: string
       name:
         type: string
-

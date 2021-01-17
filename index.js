@@ -12,6 +12,7 @@ import authenticationRouter from './api/authentication';
 import genresRouter from './api/genres';
 import nowPlayingRouter from './api/nowPlaying';
 import topRatedRouter from './api/topRated';
+import latestRouter from './api/latest';
 import session from 'express-session';
 import passport from './authenticate';
 
@@ -80,6 +81,8 @@ app.use('/api/genres', genresRouter);
 app.use('/api/nowplaying', nowPlayingRouter);
 
 app.use('/api/toprated', topRatedRouter);
+
+app.use('/api/latest', latestRouter);
 
 app.use(errHandler);
 
